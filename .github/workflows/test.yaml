@@ -1,0 +1,33 @@
+name: Custom Container Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  set-container-image:
+    runs-on: ubuntu-latest
+    outputs:
+      container_image: ${{ steps.set_image.outputs.image }}
+    steps:
+      - name: Set container image
+        id: set_image
+        run: |
+          echo "::set-output name=image::your-container-image"
+
+  build:
+    needs: set-container-image
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ needs.set-container-image.outputs.container_image }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Run commands inside the container
+        run: |
+          echo "Hello from the custom container!"
