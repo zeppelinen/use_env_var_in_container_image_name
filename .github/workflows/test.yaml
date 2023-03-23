@@ -1,5 +1,8 @@
 name: Custom Container Workflow
 
+env:
+  IMAGE_NAME: ubuntu:latest
+
 on:
   push:
     branches:
@@ -17,7 +20,7 @@ jobs:
       - name: Set container image
         id: set_image
         run: |
-          echo "::set-output name=image::your-container-image"
+          echo "::set-output name=image::${{ env.IMAGE_NAME }}"
 
   build:
     needs: set-container-image
